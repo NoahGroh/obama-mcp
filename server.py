@@ -25,7 +25,6 @@ def search_obama_context(query: str) -> str:
     in his actual words and positions.
     """
     vec = embed(query)
-
     res = supabase.rpc("match_obama_speeches", {
         "query_embedding": vec,
         "match_count": 5
@@ -45,5 +44,4 @@ def search_obama_context(query: str) -> str:
     )
 
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(mcp.sse_app(), host="0.0.0.0", port=8000)
+    mcp.run(transport="sse")
