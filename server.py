@@ -45,4 +45,5 @@ def search_obama_context(query: str) -> str:
     )
 
 if __name__ == "__main__":
-    mcp.run(transport="streamable-http", host="0.0.0.0", port=8000)
+    import uvicorn
+    uvicorn.run(mcp.streamable_http_app(), host="0.0.0.0", port=8000)
