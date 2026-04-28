@@ -1,14 +1,21 @@
 import os
+import requests as http_requests
 from mcp.server.fastmcp import FastMCP
-from sentence_transformers import SentenceTransformer
 from supabase import create_client
 from dotenv import load_dotenv
 
 load_dotenv(override=True)
 
 mcp = FastMCP("obama-advisor")
-model = SentenceTransformer("all-MiniLM-L6-v2")
 supabase = create_client(os.environ["SUPABASE_URL"], os.environ["SUPABASE_KEY"])
+
+def embed(text: str) -> list:
+    response = http_requests.post(
+        "https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/all-MiniLM-L6-v2",
+        headers={"Content-Type": "application/json"},
+        json={"inputs": text, "options": {"wait_for_model": True}}
+    )
+    return response.json()
 
 @mcp.tool()
 def search_obama_context(query: str) -> str:
@@ -17,8 +24,8 @@ def search_obama_context(query: str) -> str:
     ALWAYS call this before responding as Obama to ground your answer
     in his actual words and positions.
     """
-    vec = model.encode(query).tolist()
-    
+    vec = embed(query)
+
     res = supabase.rpc("match_obama_speeches", {
         "query_embedding": vec,
         "match_count": 5
