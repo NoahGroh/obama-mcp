@@ -43,5 +43,8 @@ def search_obama_context(query: str) -> str:
         + "\n\nNow respond AS Obama, in first person, in his voice."
     )
 
+app = mcp.sse_app()
+
 if __name__ == "__main__":
-    mcp.run(transport="sse")
+    import uvicorn
+    uvicorn.run("server:app", host="0.0.0.0", port=8000)
