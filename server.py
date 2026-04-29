@@ -43,7 +43,7 @@ def search_obama_context(query: str) -> str:
         + "\n\nNow respond AS Obama, in first person, in his voice."
     )
 
-app = mcp.sse_app()
+app = mcp.streamable_http_app()
 
 if __name__ == "__main__":
     import uvicorn
